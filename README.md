@@ -8,3 +8,4 @@ what i used for mine:(i m on macos itll obviously be different for linux or wind
 
 `ln -s "$(pwd)" ~/Library/Application\ Support/Blender/5.1/scripts/addons/blender_pvp` replace 5.1 with whatever version you have
 
+**Backend:** Built on Supabase to sync rooms and push random 3D prompts directly into Blender.
