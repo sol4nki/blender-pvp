@@ -1,10 +1,66 @@
 import bpy
 import json
 
-path = "./render_settings.json"
+# path = "./render_settings.json"
 
-with open(path, "r") as f:
-    settings = json.load(f)
+# with open(path, "r") as f:
+#     settings = json.load(f)
+# read about how to use path
+settings = {
+    "scene_name": "Custom Cycles",
+    "render": {
+        "engine": "CYCLES",
+        "resolution_x": 1024,
+        "resolution_y": 1024,
+        "resolution_percentage": 50,
+        "fps": 24,
+        "fps_base": 1.0,
+        "frame_start": 1,
+        "frame_end": 250,
+        "frame_step": 1,
+        "filepath": "/tmp/",
+        "film_transparent": False,
+        "use_persistent_data": False
+    },
+    "image_settings": {
+        "file_format": "PNG",
+        "color_mode": "RGBA",
+        "color_depth": "8",
+        "compression": 90,
+        "quality": 90
+    },
+    "cycles": {
+        "samples": 400,
+        "adaptive_sampling": True,
+        "adaptive_threshold": 0.009999999776482582,
+        "use_denoising": True,
+        "denoiser": "OPENIMAGEDENOISE",
+        "preview_samples": 100,
+        "use_preview_denoising": True,
+        "preview_denoiser": "AUTO",
+        "preview_adaptive_threshold": 0.10000000149011612,
+        "max_bounces": 64,
+        "diffuse_bounces": 128,
+        "glossy_bounces": 128,
+        "transmission_bounces": 128,
+        "volume_bounces": 1,
+        "transparent_max_bounces": 0,
+        "use_auto_tile": True,
+        "device": "GPU",
+        "seed": 0,
+        "time_limit": 0.0,
+        "pixel_filter_type": "GAUSSIAN",
+        "filter_width": 1.5
+    },
+    "color_management": {
+        "view_transform": "Standard",
+        "look": "None",
+        "exposure": 0.0,
+        "gamma": 1.0,
+        "display_device": "sRGB"
+    }
+}
+
 
 scene = bpy.context.scene
 render = scene.render
