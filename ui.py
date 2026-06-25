@@ -1,51 +1,63 @@
 import bpy
+import runpy
+import os
 
-class PVP_OT_login(bpy.types.Operator):
-    bl_idname = "pvp.login"
-    bl_label = "Login"
+
+class PVP_OT_apply_render_settings(bpy.types.Operator):
+    bl_idname = "pvp.apply_render_settings"
+    bl_label = "Apply Render Settings"
 
     def execute(self, context):
-        self.report({'INFO'}, "Login clicked")
+        try:
+            path = os.path.join(
+                os.path.dirname(__file__),
+                "extractor",
+                "apply_render_settings.py"
+            )
+
+            runpy.run_path(path)
+
+            self.report({'INFO'}, "Render settings applied")
+        except Exception as e:
+            self.report({'ERROR'}, str(e))
+
         return {'FINISHED'}
 
 
-class PVP_OT_find_match(bpy.types.Operator):
-    bl_idname = "pvp.find_match"
-    bl_label = "Find Match"
+class PVP_OT_reset_render(bpy.types.Operator):
+    bl_idname = "pvp.reset_render"
+    bl_label = "Reset Render Settings"
 
     def execute(self, context):
-        self.report({'INFO'}, "Finding match...")
+        scene = bpy.context.scene
+        render = scene.render
+
+        # Reset to Eevee defaults
+        render.engine = 'BLENDER_EEVEE_NEXT' if hasattr(bpy.types, "BLENDER_EEVEE_NEXT") else 'BLENDER_EEVEE'
+
+        render.resolution_x = 1920
+        render.resolution_y = 1080
+        render.resolution_percentage = 100
+
+        render.fps = 24
+        render.fps_base = 1.0
+
+        scene.frame_start = 1
+        scene.frame_end = 250
+        scene.frame_step = 1
+
+        if hasattr(scene, "cycles"):
+            c = scene.cycles
+            c.samples = 128
+            c.use_adaptive_sampling = False
+            c.use_denoising = False
+
+        self.report({'INFO'}, "Reset to default Eevee settings")
         return {'FINISHED'}
 
-
-class PVP_OT_start_game(bpy.types.Operator):
-    bl_idname = "pvp.start_game"
-    bl_label = "Start Game"
-
-    def execute(self, context):
-        self.report({'INFO'}, "Game started")
-        return {'FINISHED'}
-
-
-class PVP_OT_render(bpy.types.Operator):
-    bl_idname = "pvp.render"
-    bl_label = "Render"
-
-    def execute(self, context):
-        self.report({'INFO'}, "Rendering...")
-        return {'FINISHED'}
-
-
-class PVP_OT_submit(bpy.types.Operator):
-    bl_idname = "pvp.submit"
-    bl_label = "Submit"
-
-    def execute(self, context):
-        self.report({'INFO'}, "Submitted render")
-        return {'FINISHED'}
 
 class PVP_PT_main_panel(bpy.types.Panel):
-    bl_label = "PvP Blender"
+    bl_label = "Blender PvP"
     bl_idname = "PVP_PT_main_panel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -54,29 +66,18 @@ class PVP_PT_main_panel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
 
-        layout.label(text="Blender PvP Prototype")
+        layout.label(text="Render Controls")
+
+        layout.operator("pvp.apply_render_settings", icon="RENDER_STILL")
+        layout.operator("pvp.reset_render", icon="LOOP_BACK")
 
         layout.separator()
+        layout.label(text="PvP Prototype")
 
-        layout.operator("pvp.login", icon="USER")
-        layout.operator("pvp.find_match", icon="VIEWZOOM")
-        layout.operator("pvp.start_game", icon="PLAY")
-
-        layout.separator()
-
-        layout.operator("pvp.render", icon="RENDER_STILL")
-        layout.operator("pvp.submit", icon="EXPORT")
-
-        layout.separator()
-
-        layout.label(text="Debug Mode Active")
 
 classes = (
-    PVP_OT_login,
-    PVP_OT_find_match,
-    PVP_OT_start_game,
-    PVP_OT_render,
-    PVP_OT_submit,
+    PVP_OT_apply_render_settings,
+    PVP_OT_reset_render,
     PVP_PT_main_panel,
 )
 
