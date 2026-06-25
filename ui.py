@@ -22,7 +22,7 @@ def init_props():
 
     scene.pvp_player_name = bpy.props.StringProperty(
         name="Player Name",
-        username = f"User{random.randint(0, 999):03d}"
+        default = f"User{random.randint(0, 999):03d}"
     )
     scene.pvp_active_prompt = bpy.props.StringProperty(
         name="Prompt",
