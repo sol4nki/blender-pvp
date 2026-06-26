@@ -289,7 +289,7 @@ def stop_poll():
 
 def init_props():
     S = bpy.types.Scene
-    S.pvp_player_name = bpy.props.StringProperty(name="Name", default="Player")
+    S.pvp_player_name = bpy.props.StringProperty(name="Name", default=f"User{random.randint(0, 999):03d}")
     S.pvp_player_id = bpy.props.StringProperty(default="")
     S.pvp_room_id = bpy.props.StringProperty(default="")
     S.pvp_room_code = bpy.props.StringProperty(default="")
